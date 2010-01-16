@@ -25,6 +25,12 @@
       (when (> s p)
 	(return (car pair))))))
 
+(defun normalize-alist! (dist)
+  "Normalize an alist distribution to sum to 1"
+  (let ((total (reduce #'+ dist :key #'cdr)))
+    (assert (not (zerop total)))
+    (dolist (pair dist dist)
+      (_f / (cdr pair) total))))
   
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

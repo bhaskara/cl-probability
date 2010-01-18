@@ -1,6 +1,6 @@
 (in-package :cl-prob)
 
-;; Probability distributions represented as alist, where entries are compared using #'equal
+;; Discrete probability distributions represented as alist, where entries are compared using #'equal
 
 (defmethod probability ((dist list) event)
   (let ((fn (event-function event)))
@@ -20,7 +20,8 @@
 (defmethod sample ((dist list))
   (let ((p (random 1.0))
 	(s 0.0))
-    (dolist (pair dist (caar (last dist)))
+    (dolist (pair dist (progn (warn "Unexpectedly reached end with s=~a, p=~a when sampling from ~a; using last element" s p dist)
+			      (caar (last dist))))
       (incf s (cdr pair))
       (when (> s p)
 	(return (car pair))))))

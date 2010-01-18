@@ -6,4 +6,5 @@
   :components
   ((:file "package")
    (:file "ops" :depends-on ("package"))
-   (:file "alist" :depends-on ("ops"))))
+   (:file "alist" :depends-on ("ops")))
+  :depends-on ("cl-utils"))

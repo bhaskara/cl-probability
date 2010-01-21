@@ -4,9 +4,13 @@
 
 (defmethod probability ((dist list) event)
   (let ((fn (event-function event)))
-    (reduce #'+ dist :key #'(lambda (pair) (if (funcall fn (car pair)) (cdr pair) 0.0)))))
+    (reduce #'+ dist :key #'(lambda (pair)
+			      (dsbind (item . prob) pair
+				(declare (float prob))
+				(if (funcall fn item) prob 0.0))))))
 
 (defmethod condition-on-event ((dist list) event &key return-type)
+  ;; Todo put in declarations
   (assert (null return-type))
   (let* ((fn (event-function event))
 	 (norm (probability dist fn)))
@@ -17,14 +21,21 @@
        when (funcall fn x)
        collect (cons x (/ (cdr pair) norm)))))
 
+(defvar *num-samples* 0)
+(defvar *num-large* 0)
+
 (defmethod sample ((dist list))
+  (incf *num-samples*)
   (let ((p (random 1.0))
 	(s 0.0))
+    (when (> p .99999) (incf *num-large*))
     (dolist (pair dist (progn (warn "Unexpectedly reached end with s=~a, p=~a when sampling from ~a; using last element" s p dist)
 			      (caar (last dist))))
-      (incf s (cdr pair))
-      (when (> s p)
-	(return (car pair))))))
+      (dsbind (item . prob) pair
+	(declare (float prob))
+	(incf s prob)
+	(when (> s p)
+	  (return item))))))
 
 (defun normalize-alist! (dist)
   "Normalize an alist distribution to sum to 1"

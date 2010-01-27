@@ -8,3 +8,6 @@
 
 (defgeneric sample (dist)
   (:documentation "Generate a sample from the distribution, using the current value of *random-state*"))
+
+(defgeneric expectation (dist rv)
+  (:documentation "Expectation of a random variable wrt a distribution"))

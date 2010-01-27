@@ -9,6 +9,10 @@
 				(declare (float prob))
 				(if (funcall fn item) prob 0.0))))))
 
+(defmethod expectation ((dist list) (rv function))
+  (reduce #'+ dist :key #'(lambda (entry) (* (funcall rv (car entry)) (cdr entry)))))
+
+
 (defmethod condition-on-event ((dist list) event &key return-type)
   ;; Todo put in declarations
   (assert (null return-type))

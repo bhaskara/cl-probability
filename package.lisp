@@ -2,6 +2,16 @@
   (:nicknames :cl-prob)
   (:use :cl :cl-utils)
   (:export 
-   :probability :condition-on-event :sample
+
+   ;; Generic ops
+   :probability :condition-on-event :sample :expectation
+
+   ;; Specific distribution types
+
+   :normalize-alist!
+
+   :sample-exponential))
+
    
-   :normalize-alist!))
+
+   

@@ -6,7 +6,7 @@
   (let ((fn (event-function event)))
     (reduce #'+ dist :key #'(lambda (pair)
 			      (dsbind (item . prob) pair
-				(declare (float prob))
+				(declare ((or float rational) prob))
 				(if (funcall fn item) prob 0.0))))))
 
 (defmethod expectation ((dist list) (rv function))

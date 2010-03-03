@@ -4,7 +4,8 @@
   (:nicknames :ctmc)
   (:export
    :continuous-time-markov-chain
-   :sample-jump))
+   :sample-jump
+   :sample-future-state))
 
 (in-package :ctmc)
 
@@ -65,3 +66,13 @@
 	    (sample (aref (next-state-dists m) i)))))
     
   
+(defun sample-future-state (m s d)
+  "Given state at some time T, sample the state at time T + D"
+  (declare (type continuous-time-markov-chain m) (float d))
+  (let ((time 0.0))
+    (loop
+      (mvbind (jump-time new-state) (sample-jump m s)
+	(incf time jump-time)
+	(if (> time d)
+	    (return s)
+	    (setq s new-state))))))

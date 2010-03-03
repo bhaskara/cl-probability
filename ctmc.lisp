@@ -12,10 +12,13 @@
   ((q :initarg :q :reader q)
    (alphabet :initarg :alphabet :reader alphabet :writer set-alphabet)
    (init-dist :initarg :init-dist :reader init-dist)
+   (test :initarg :test :reader test :initform #'eql)
    (next-state-dists :reader next-state-dists))
   (:documentation "Initargs
 :q - intensity matrix
-:alphabet - list or vector of state space, where Ith entry corresponds to ith row/column in q-matrix.  Defaults to 0..n-1"))
+:alphabet - list or vector of state space, where Ith entry corresponds to ith row/column in q-matrix.  Defaults to 0..n-1
+:test - used for equality checking over alphabet.  Defaults to #'eql.
+"))
 
 
 (defmethod initialize-instance :after ((m continuous-time-markov-chain) &rest args &key q)
@@ -53,7 +56,7 @@
            
 
 (defun state-index (m s)
-  (check-not-null (position s (alphabet m))))
+  (check-not-null (position s (alphabet m) :test (test m))))
 
 (defun sample-jump (m s)
   "Given current state S, return time to next jump and new state."
